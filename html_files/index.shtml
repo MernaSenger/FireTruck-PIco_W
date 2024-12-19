@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicoW Fire Detection & Car Control System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Aldrich&family=Chakra+Petch:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #B23A24;
+            --secondary-bg: rgba(178, 58, 36, 0.9);
+            --accent-color: #FFC300;
+            --danger-color: #FFFFFF;
+            --text-color: #FFFFFF;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Chakra Petch', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-bg) 0%, #6A1B1B 100%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--secondary-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 20px rgba(255, 195, 0, 0.2);
+            border: 3px solid var(--accent-color);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Aldrich', sans-serif;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 15px rgba(255, 195, 0, 0.9);
+            font-weight: 400;
+        }
+
+        .status-section {
+            background-color: rgba(178, 58, 36, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px solid var(--accent-color);
+        }
+
+        .flame-indicator {
+            width: 120px;
+            height: 120px;
+            background: radial-gradient(circle, var(--danger-color), #FFFFFF);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.8);
+            border: 3px solid var(--accent-color);
+        }
+
+        .flame-indicator i {
+            font-size: 4rem;
+            color: var(--primary-bg);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .warning-text {
+            color: var(--accent-color);
+            font-family: 'Aldrich', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .control-btn {
+            background-color: rgba(255, 195, 0, 0.2);
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            width: 80px;
+            height: 80px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            cursor: pointer;
+            font-family: 'Chakra Petch', monospace;
+        }
+
+        .control-btn:hover {
+            background-color: rgba(255, 195, 0, 0.4);
+            transform: scale(1.05);
+        }
+
+        .control-btn:active {
+            background-color: rgba(255, 195, 0, 0.6);
+            transform: scale(0.95);
+        }
+
+        .refresh-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: var(--accent-color);
+            text-decoration: none;
+            padding: 12px;
+            background-color: rgba(255, 195, 0, 0.1);
+            border: 1px solid var(--accent-color);
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            font-family: 'Chakra Petch', monospace;
+        }
+
+        .refresh-link:hover {
+            background-color: rgba(255, 195, 0, 0.2);
+        }
+
+        @media (max-width: 400px) {
+            .container {
+                padding: 15px;
+            }
+            .control-btn {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Fire Detection & Car Control</h1>
+        </div>
+        
+        <div class="status-section">
+            <div class="flame-indicator">
+                <i class="fas fa-fire"></i>
+            </div>
+            
+            <div class="warning-text">
+                FLAME DETECTED - EMERGENCY MODE
+            </div>
+        </div>
+<div style="flex-direction: row;
+display: flex; margin-left: 13%;">
+        <div class="control-section">
+            <div class="control-row">
+                <a href="/motor.cgi?motor=forward" class="control-btn">
+                    <i class="fas fa-arrow-up"></i>
+                </a>
+            </div>
+            <div class="control-row">
+                <a href="/motor.cgi?motor=left" class="control-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <a href="/motor.cgi?motor=right" class="control-btn">
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+            <div class="control-row">
+                <a href="/motor.cgi?motor=backward" class="control-btn">
+                    <i class="fas fa-arrow-down"></i>
+                </a>
+            </div>
+          
+        </div>
+        <div class="control-row" style = "margin-top: 20%; margin-left:20%;">
+            <a href="/motor.cgi?motor=stop" class="control-btn">
+                <i class="fas fa-stop"></i>
+            </a>
+        </div>
+    </div>
+    <div class="led-control-section" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        <a href="/led.cgi?led=1" class="control-btn">
+            <i class="fas fa-lightbulb"></i>
+        </a>
+        <a href="/led.cgi?led=0" class="control-btn">
+            <i class="fas fa-moon"></i>
+        </a>
+    </div>
+      
+      
+            <a href="/index.shtml" class="refresh-link">
+            <i class="fas fa-sync-alt"></i> Refresh System Status
+        </a>
+    </div>
+
+    <script>
+        // Optional: Add some client-side interactivity
+        document.querySelectorAll('.control-btn').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.95)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PicoW Fire Detection System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400&display=swap');
+
+        body {
+            background-color: #0a0a1a;
+            color: #00ff9c;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(10, 20, 40, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0, 255, 156, 0.2);
+            border: 2px solid #00ff9c;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            color: #ff3030;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 48, 48, 0.7);
+        }
+
+        h2 {
+            color: #ff6b6b;
+            border-bottom: 2px solid #ff3030;
+            padding-bottom: 10px;
+        }
+
+        .status-panel {
+            background-color: rgba(30, 30, 50, 0.9);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .flame-indicator {
+            width: 100px;
+            height: 100px;
+            background-color: #ff3030;
+            border-radius: 50%;
+            margin: 0 auto;
+            animation: pulse 1.5s infinite;
+            box-shadow: 0 0 30px rgba(255, 48, 48, 0.7);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+
+        .warning-text {
+            color: #ff3030;
+            font-weight: bold;
+            margin-top: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .refresh-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #00ff9c;
+            text-decoration: none;
+            padding: 10px;
+            background-color: rgba(0, 255, 156, 0.2);
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .refresh-link:hover {
+            background-color: rgba(0, 255, 156, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Fire Detection System</h1>
+        
+        <div class="status-panel">
+            <h2>Flame Detection Status</h2>
+            
+            <div class="flame-indicator"></div>
+            
+            <div class="warning-text">
+                FLAME DETECTED
+            </div>
+            <a href="/led.cgi?led=1"><button>LED ON</button></a>
+            <a href="/led.cgi?led=0"><button>LED OFF</button></a>
+            <div class="control-section">
+                <div class="control-row">
+                    <a href="/motor.cgi?motor=forward" class="control-btn">
+                        <i class="fas fa-arrow-up"></i>
+                    </a>
+                </div>
+                <div class="control-row">
+                    <a href="/motor.cgi?motor=left" class="control-btn">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <a href="/motor.cgi?motor=right" class="control-btn">
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="control-row">
+                    <a href="/motor.cgi?motor=stop" class="control-btn">
+                        <i class="fas fa-s"></i>
+                    </a>
+                </div>
+              
+            </div>
+            
+        </div>
+
+        <a href="/index.shtml" class="refresh-link">Refresh Status</a>
+    </div>
+</body>
+</html> -->
