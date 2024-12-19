@@ -88,21 +88,21 @@ int main() {
       count =0;
       }
       if ((left<=3000 || middle<=3000 || right<=3000) && !(left <= 150  ||  middle<=150 || right<=150)){
-        printf("batta\n");
+      
         if (left<right && left<=middle){
           motor_control_left(200);
           sleep_ms(100);
-          printf("abouElsaadat");
+          
         }
         else if (middle<=left && middle<=right){
           motor_control_forward(249);
           sleep_ms(100);
-          printf("haytham");
+         
         }
         else if(right<middle && right<left){
           motor_control_right(200);
           sleep_ms(100);
-          printf("mervat");
+        
         }
          water_pump_off() ;
       }
